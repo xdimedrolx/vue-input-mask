@@ -288,8 +288,6 @@ export default {
     },
 
     onKeyDown (event) {
-      console.log('key-down')
-
       this.backspaceOrDeleteRemoval = null;
 
       // if (typeof this.props.onKeyDown === 'function') {
@@ -321,8 +319,6 @@ export default {
     },
 
     onChange (event) {
-      console.log('change')
-
       var { paste } = this;
       var { mask, maskChar, lastEditablePos, prefix } = this.maskOptions;
 
@@ -435,7 +431,6 @@ export default {
     },
 
     onFocus (event) {
-      console.log('focus')
       this.focused = true;
 
       if (this.maskOptions.mask) {
@@ -477,7 +472,6 @@ export default {
 
     onBlur (event) {
       this.focused = false;
-      console.log('blur')
 
       if (this.maskOptions.mask && !this.alwaysShowMask && isEmpty(this.maskOptions, this.elValue)) {
         var inputValue = '';
@@ -497,7 +491,6 @@ export default {
     },
 
     onPaste (event) {
-      console.log('paste')
       this.$emit('paste', event)
 
       if (this.isAndroidBrowser && !event.defaultPrevented) {
