@@ -426,6 +426,7 @@ export default {
         }
       }
       value = formatValue(this.maskOptions, value);
+      console.log(value)
 
       this.setInputValue(value);
 
@@ -487,7 +488,7 @@ export default {
     onBlur (event) {
       this.focused = false;
 
-      if (this.maskOptions.mask && !this.props.alwaysShowMask && isEmpty(this.maskOptions, this.elValue)) {
+      if (this.maskOptions.mask && !this.alwaysShowMask && isEmpty(this.maskOptions, this.elValue)) {
         var inputValue = '';
         var isInputValueChanged = inputValue !== this.getInputValue();
 
@@ -531,7 +532,7 @@ export default {
 
       this.setInputValue(value);
       if (event) {
-        this.$emit('input', event)
+        this.$emit('input', value)
         // this.props.onChange(event);
       }
 
