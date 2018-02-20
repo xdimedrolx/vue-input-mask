@@ -3531,8 +3531,8 @@ rc@^1.1.7:
     strip-json-comments "~2.0.1"
 
 react-input-mask@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/react-input-mask/-/react-input-mask-1.0.7.tgz#690d2189a1206972aeb82f332336be337fddf280"
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/react-input-mask/-/react-input-mask-1.2.2.tgz#225a1130d316ee54cea7431f004c738b4c41b4da"
 
 read-pkg-up@^1.0.1:
   version "1.0.1"

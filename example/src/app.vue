@@ -1,6 +1,7 @@
 <template>
   <div>
     <input-mask v-model="value" mask="+7 (999) 999-99-99"></input-mask>
+    <p>{{ value }}</p>
   </div>
 </template>
 

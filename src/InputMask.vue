@@ -319,17 +319,28 @@ export default {
     },
 
     onChange (event) {
-      var { paste } = this;
+      var { beforePasteState } = this;
       var { mask, maskChar, lastEditablePos, prefix } = this.maskOptions;
-
       var value = this.getInputValue();
-      var oldValue = this.elValue;
 
-      if (paste) {
-        this.paste = null;
-        this.pasteText(paste.value, value, paste.selection, event);
+      if (beforePasteState) {
+        this.beforePasteState = null;
+        this.pasteText(beforePasteState.value, value, beforePasteState.selection, event);
         return;
       }
+
+      var oldValue = this.elValue;
+      var input = this.getInputDOMNode();
+
+      // autofill replaces whole value, ignore old one
+      // https://github.com/sanniassin/react-input-mask/issues/113
+      //
+      // input.matches throws exception if selector isn't supported
+      try {
+        if (typeof input.matches === 'function' && input.matches(':-webkit-autofill')) {
+          oldValue = '';
+        }
+      } catch (e) {}
 
       var selection = this.getSelection();
       var cursorPos = selection.end;
@@ -358,6 +369,9 @@ export default {
             : this.getLeftEditablePos(cursorPos - 1);
 
           if (editablePos !== null) {
+            if (!maskChar) {
+              value = value.substr(0, getFilledLength(this.maskOptions, value));
+            }
             value = clearRange(this.maskOptions, value, editablePos, 1);
             cursorPos = editablePos;
           }
@@ -473,7 +487,7 @@ export default {
     onBlur (event) {
       this.focused = false;
 
-      if (this.maskOptions.mask && !this.alwaysShowMask && isEmpty(this.maskOptions, this.elValue)) {
+      if (this.maskOptions.mask && !this.props.alwaysShowMask && isEmpty(this.maskOptions, this.elValue)) {
         var inputValue = '';
         var isInputValueChanged = inputValue !== this.getInputValue();
 
@@ -493,8 +507,11 @@ export default {
     onPaste (event) {
       this.$emit('paste', event)
 
-      if (this.isAndroidBrowser && !event.defaultPrevented) {
-        this.paste = {
+      // we need raw pasted text, but event.clipboardData
+      // may not work in Android browser, so we clean input
+      // to get raw text in onChange handler
+      if (!event.defaultPrevented) {
+        this.beforePasteState = {
           value: this.getInputValue(),
           selection: this.getSelection()
         };
@@ -503,21 +520,19 @@ export default {
     },
 
     pasteText (value, text, selection, event) {
-      let cursorPos = selection.start;
+      var cursorPos = selection.start;
       if (selection.length) {
         value = clearRange(this.maskOptions, value, cursorPos, selection.length);
       }
-      let textLen = getInsertStringLength(this.maskOptions, value, text, cursorPos);
+      var textLen = getInsertStringLength(this.maskOptions, value, text, cursorPos);
       value = insertString(this.maskOptions, value, text, cursorPos);
       cursorPos += textLen;
       cursorPos = this.getRightEditablePos(cursorPos) || cursorPos;
 
-      if (value !== this.getInputValue()) {
-        this.setInputValue(value);
-        this.$emit('input', event);
-        // if (event && typeof this.props.onChange === 'function') {
-        //   this.props.onChange(event);
-        // }
+      this.setInputValue(value);
+      if (event) {
+        this.$emit('input', event)
+        // this.props.onChange(event);
       }
 
       this.setCursorPos(cursorPos);
