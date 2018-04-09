@@ -67,7 +67,15 @@ export default {
     }
   },
 
-  // watch: {
+  watch: {
+    value (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        let value = formatValue(this.maskOptions, newValue)
+        if (this.getInputValue() !== value) {
+          this.setInputValue(formatValue(this.maskOptions, newValue));
+        }
+      }
+    }
   //   config: {
   //     // componentWillReceiveProps handler
   //     handler(newProps, oldProps) {
@@ -118,7 +126,7 @@ export default {
   //     },
   //     deep: true
   //   }
-  // },
+  },
 
   data () {
     return {
@@ -147,7 +155,6 @@ export default {
     }
 
     this.elValue = this.getStringValue(this.elValue);
-
 
     if (this.maskOptions.mask && (this.alwaysShowMask || this.elValue)) {
       this.elValue = formatValue(this.maskOptions, this.elValue);
@@ -426,7 +433,6 @@ export default {
         }
       }
       value = formatValue(this.maskOptions, value);
-      console.log(value)
 
       this.setInputValue(value);
 
