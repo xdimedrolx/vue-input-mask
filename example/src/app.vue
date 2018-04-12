@@ -17,6 +17,14 @@
 
     <input-mask v-model="defaultValue" mask="+7 (999) 999-99-99" default-value="+79996665544"></input-mask>
     <p>{{ defaultValue }}</p>
+
+    <form>
+      <input-mask v-model="auth.login" mask="+7 (999) 999-99-99" name="username"></input-mask>
+      <input type="password" v-model="auth.password" name="current-password"></input>
+      <button>Войти</button>
+    </form>
+
+    {{ $data }}
   </div>
 </template>
 
@@ -37,7 +45,11 @@ export default {
       phoneTimeout: null,
       passport: '99999 123456',
       passportDisabled: '99999 123456',
-      nullPassportTimeout: null
+      nullPassportTimeout: null,
+      auth: {
+        login: '',
+        password: ''
+      }
     }
   },
 

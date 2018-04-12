@@ -138,7 +138,8 @@ export default {
       focused: false,
       maskOptions: null,
       hasValue: true,
-      elValue: this.value
+      elValue: this.value,
+      changeTriggered: false
     }
   },
 
@@ -329,6 +330,9 @@ export default {
       var { beforePasteState } = this;
       var { mask, maskChar, lastEditablePos, prefix } = this.maskOptions;
       var value = this.getInputValue();
+      var changeTriggered = this.changeTriggered
+
+      this.changeTriggered = true
 
       if (beforePasteState) {
         this.beforePasteState = null;
@@ -357,6 +361,12 @@ export default {
 
       var clearedValue;
       var enteredString;
+
+      if (oldValueLen === 0 && valueLen > 0 && !changeTriggered) {
+        this.setInputValue(formatValue(this.maskOptions, value || ''));
+        this.$emit('input', value)
+        return;
+      }
 
       if (this.backspaceOrDeleteRemoval) {
         var deleteFromRight = this.backspaceOrDeleteRemoval.key === 'Delete';
