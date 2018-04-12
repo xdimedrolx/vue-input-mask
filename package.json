@@ -1,6 +1,6 @@
 {
   "name": "vue-input-mask",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Masked input component for Vue",
   "main": "dist/index.js",
   "scripts": {
