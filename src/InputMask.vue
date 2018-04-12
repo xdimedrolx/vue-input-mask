@@ -70,9 +70,9 @@ export default {
   watch: {
     value (newValue, oldValue) {
       if (newValue !== oldValue) {
-        let value = formatValue(this.maskOptions, newValue)
+        let value = formatValue(this.maskOptions, newValue || '')
         if (this.getInputValue() !== value) {
-          this.setInputValue(formatValue(this.maskOptions, newValue));
+          this.setInputValue(value);
         }
       }
     }
@@ -345,7 +345,7 @@ export default {
       // input.matches throws exception if selector isn't supported
       try {
         if (typeof input.matches === 'function' && input.matches(':-webkit-autofill')) {
-          oldValue = '';
+          // oldValue = '';
         }
       } catch (e) {}
 
