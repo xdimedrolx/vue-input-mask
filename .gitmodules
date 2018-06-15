@@ -1,0 +1,3 @@
+[submodule "react-input-mask"]
+	path = react-input-mask
+	url = https://github.com/sanniassin/react-input-mask
