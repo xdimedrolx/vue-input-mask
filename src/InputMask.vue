@@ -202,6 +202,7 @@ export default {
 
       this.elValue = value;
       input.value = value;
+      this.$emit('input', value)
     },
 
     getLeftEditablePos (pos) {
@@ -364,7 +365,7 @@ export default {
 
       if (oldValueLen === 0 && valueLen > 0 && !changeTriggered) {
         this.setInputValue(formatValue(this.maskOptions, value || ''));
-        this.$emit('input', value)
+//        this.$emit('input', value)
         return;
       }
 
@@ -446,7 +447,7 @@ export default {
 
       this.setInputValue(value);
 
-      this.$emit('input', value)
+//      this.$emit('input', value)
 
       // if (typeof this.props.onChange === 'function') {
       //   this.props.onChange(event);
@@ -510,7 +511,7 @@ export default {
 
         if (isInputValueChanged) {
           this.setInputValue(inputValue);
-          this.$emit('input', inputValue);
+//          this.$emit('input', inputValue);
         }
 
         // if (isInputValueChanged && typeof this.props.onChange === 'function') {
@@ -547,10 +548,10 @@ export default {
       cursorPos = this.getRightEditablePos(cursorPos) || cursorPos;
 
       this.setInputValue(value);
-      if (event) {
-        this.$emit('input', value)
+//      if (event) {
+//        this.$emit('input', value)
         // this.props.onChange(event);
-      }
+//      }
 
       this.setCursorPos(cursorPos);
     }
