@@ -61,8 +61,7 @@ export default {
         maskChar: this.maskChar,
         formatChars: this.formatChars,
         defaultValue: this.defaultValue,
-        alwaysShowMask: this.alwaysShowMask,
-        value: this.value
+        alwaysShowMask: this.alwaysShowMask
       }
     }
   },
@@ -76,57 +75,55 @@ export default {
           this.$emit('input', isEmpty(this.maskOptions, this.elValue) ? '' : value)
         }
       }
+    },
+    config: {
+      deep: true,
+      handler(newProps, oldProps) {
+        this.hasValue = this.value != null;
+        this.maskOptions = parseMask(newProps.mask, newProps.maskChar, newProps.formatChars);
+
+        if (!this.maskOptions.mask) {
+          this.backspaceOrDeleteRemoval = null;
+          this.lastCursorPos = null;
+          return;
+        }
+
+        var isMaskChanged = this.maskOptions.mask && this.maskOptions.mask !== oldProps.mask;
+        var showEmpty = newProps.alwaysShowMask || this.isFocused();
+        var newValue = this.hasValue ? this.getStringValue(this.value) : this.value;
+
+        if (!oldProps.mask && !this.hasValue) {
+          newValue = this.getInputDOMNode().value;
+        }
+
+        if (isMaskChanged || (this.maskOptions.mask && (newValue || showEmpty))) {
+          newValue = formatValue(this.maskOptions, newValue);
+
+          if (isMaskChanged) {
+            var pos = this.lastCursorPos;
+            var filledLen = getFilledLength(this.maskOptions, newValue);
+            if (pos === null || filledLen < pos) {
+              if (isFilled(this.maskOptions, newValue)) {
+                pos = filledLen;
+              } else {
+                pos = this.getRightEditablePos(filledLen);
+              }
+              this.setCursorPos(pos);
+            }
+          }
+        }
+
+        if (this.maskOptions.mask && isEmpty(this.maskOptions, newValue) && !showEmpty && (!this.hasValue || !this.value)) {
+          newValue = '';
+        }
+
+        this.elValue = newValue;
+
+        if (this.elValue !== this.value) {
+          this.$emit('input', this.elValue);
+        }
+      }
     }
-  //   config: {
-  //     // componentWillReceiveProps handler
-  //     handler(newProps, oldProps) {
-  //       console.log('componentWillReceiveProps')
-  //       var oldMaskOptions = oldProps.maskOptions;
-  //
-  //       this.hasValue = newProps.value != null;
-  //       this.maskOptions = parseMask(newProps.mask, newProps.maskChar, newProps.formatChars);
-  //
-  //       if (!this.maskOptions.mask) {
-  //         this.backspaceOrDeleteRemoval = null;
-  //         this.lastCursorPos = null;
-  //         return;
-  //       }
-  //
-  //       var isMaskChanged = this.maskOptions.mask && this.maskOptions.mask !== oldMaskOptions.mask;
-  //       var showEmpty = newProps.alwaysShowMask || this.isFocused();
-  //       var newValue = this.hasValue
-  //         ? this.getStringValue(newProps.value)
-  //         : this.value;
-  //
-  //       if (!oldMaskOptions.mask && !this.hasValue) {
-  //         newValue = this.getInputDOMNode().value;
-  //       }
-  //
-  //       if (isMaskChanged || (this.maskOptions.mask && (newValue || showEmpty))) {
-  //         newValue = formatValue(this.maskOptions, newValue);
-  //
-  //         if (isMaskChanged) {
-  //           var pos = this.lastCursorPos;
-  //           var filledLen = getFilledLength(this.maskOptions, newValue);
-  //           if (pos === null || filledLen < pos) {
-  //             if (isFilled(this.maskOptions, newValue)) {
-  //               pos = filledLen;
-  //             } else {
-  //               pos = this.getRightEditablePos(filledLen);
-  //             }
-  //             this.setCursorPos(pos);
-  //           }
-  //         }
-  //       }
-  //
-  //       if (this.maskOptions.mask && isEmpty(this.maskOptions, newValue) && !showEmpty && (!this.hasValue || !newProps.value)) {
-  //         newValue = '';
-  //       }
-  //
-  //       this.elValue = newValue;
-  //     },
-  //     deep: true
-  //   }
   },
 
   data () {
