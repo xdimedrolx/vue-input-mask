@@ -6,6 +6,7 @@
        @paste="onPaste"
        @keydown="onKeyDown"
        @input.lazy="onChange"
+       :placeholder="placeholder"
     />
 </template>
 
@@ -51,6 +52,10 @@ export default {
     alwaysShowMask: {
       type: Boolean,
       default: false
+    },
+    placeholder: {
+      type: String,
+      default: ''
     }
   },
 
